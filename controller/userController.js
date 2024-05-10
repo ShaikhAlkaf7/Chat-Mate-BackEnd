@@ -52,7 +52,9 @@ export const loginUserHandler = asyncErrorHandler(async (req, res, next) => {
     return next(new ErrorClass(401, "Incorrect Email or Password"));
 
   // genrating token
-  const token = jwt.sign({ id: user?._id }, process.env.JWT_SECREAT_KEY);
+  const token = jwt.sign({ id: user?._id }, process.env.JWT_SECREAT_KEY, {
+    expiresIn: "1d",
+  });
 
   // sending ok response
   res.status(200).send({
@@ -60,5 +62,19 @@ export const loginUserHandler = asyncErrorHandler(async (req, res, next) => {
     message: "Login successfully",
     user,
     token,
+  });
+});
+
+export const getOtherUser = asyncErrorHandler(async (req, res, next) => {
+  const loggedInUserId = req?.user?.id;
+
+  const otherUsers = await User.find({ _id: { $ne: loggedInUserId } }).select(
+    "-password"
+  );
+
+  res.status(200).send({
+    success: true,
+    message: "User fetch successfully ",
+    otherUsers,
   });
 });
