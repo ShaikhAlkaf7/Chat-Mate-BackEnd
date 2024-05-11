@@ -1,6 +1,7 @@
 import express from "express";
 import connectDB from "./config/connectDb.js";
 import userRoute from "./routes/userRoute.js";
+import messageRoute from "./routes/messageRoute.js";
 import dotenv from "dotenv";
 dotenv.config({});
 
@@ -10,6 +11,7 @@ app.use(express.json());
 
 // all routes goes here
 app.use("/api/user", userRoute);
+app.use("/api/message", messageRoute);
 
 // error handler middlerware
 app.use((err, req, res, next) => {
