@@ -29,7 +29,6 @@ export const userRegisterHandler = asyncErrorHandler(async (req, res, next) => {
   if (!user) return next(new ErrorClass(404, "user creation failed", false));
 
   res.status(200).send({
-    user,
     message: "User created successfully ",
     successs: true,
   });
@@ -60,8 +59,12 @@ export const loginUserHandler = asyncErrorHandler(async (req, res, next) => {
   res.status(200).send({
     success: true,
     message: "Login successfully",
-    user,
-    token,
+    user: {
+      fullName: user?.fullName,
+      userName: user?.userName,
+      email: user?.email,
+      token,
+    },
   });
 });
 
