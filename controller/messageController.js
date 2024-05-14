@@ -38,6 +38,7 @@ export const sendMessageController = asyncErrorHandler(
     res.status(201).send({
       success: true,
       message: "Message send successfullyz",
+      newMessage,
     });
   }
 );
@@ -51,7 +52,8 @@ export const getMessageController = asyncErrorHandler(
       participaints: { $all: [senderId, receiverId] },
     }).populate("messages");
 
-    if (!conversation) return new ErrorClass(404, "chats not found", false);
+    if (!conversation)
+      return next(new ErrorClass(404, "chats not found", false));
 
     res.status(200).send({
       success: true,

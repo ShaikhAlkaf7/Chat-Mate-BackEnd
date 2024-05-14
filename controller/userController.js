@@ -63,6 +63,7 @@ export const loginUserHandler = asyncErrorHandler(async (req, res, next) => {
       fullName: user?.fullName,
       userName: user?.userName,
       email: user?.email,
+      _id: user?._id,
       token,
     },
   });
