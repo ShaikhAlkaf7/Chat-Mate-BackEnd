@@ -2,6 +2,7 @@ import asyncErrorHandler from "../asyncErrorHandler.js";
 import ErrorClass from "../errorClass.js";
 import Conversation from "../models/conversationModel.js";
 import Message from "../models/messageModel.js";
+import { getReciverSocketId, io } from "../socket/socket.js";
 
 export const sendMessageController = asyncErrorHandler(
   async (req, res, next) => {
@@ -31,9 +32,13 @@ export const sendMessageController = asyncErrorHandler(
       gotConversation.messages.push(newMessage?._id);
     }
 
-    await gotConversation.save();
+    await Promise.all([gotConversation.save(), newMessage.save()]);
 
     // socket io
+    const receiverSocketId = getReciverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
 
     res.status(201).send({
       success: true,

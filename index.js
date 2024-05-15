@@ -3,11 +3,14 @@ import connectDB from "./config/connectDb.js";
 import userRoute from "./routes/userRoute.js";
 import messageRoute from "./routes/messageRoute.js";
 import dotenv from "dotenv";
+import cors from "cors";
+import { app, server } from "./socket/socket.js";
 dotenv.config({});
 
-const app = express();
+// const app = express();
 const PORT = process.env.PORT || 8000;
 app.use(express.json());
+app.use(cors({ origin: "http://localhost:5173" }));
 
 // all routes goes here
 app.use("/api/user", userRoute);
@@ -24,7 +27,7 @@ app.use((err, req, res, next) => {
   res.status(status).send({ message: message, success: success });
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   connectDB();
   console.log("server is runnig");
 });
