@@ -16,6 +16,13 @@ app.use(cors({ origin: "http://localhost:5173" }));
 app.use("/api/user", userRoute);
 app.use("/api/message", messageRoute);
 
+app.use("*", (req, res) => {
+  res.send({
+    success: false,
+    message: "Page Not found ",
+  });
+});
+
 // error handler middlerware
 app.use((err, req, res, next) => {
   const {
